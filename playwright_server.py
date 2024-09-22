@@ -1,4 +1,5 @@
 from playwright.sync_api import sync_playwright
+import os
 
 
 
@@ -19,3 +20,4 @@ def test():
         browser.close()
 
     print('Finished :)')
+    print(os.path.abspath(__file__))
