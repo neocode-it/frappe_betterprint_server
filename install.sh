@@ -4,8 +4,8 @@
 apt-get update && apt-get install sudo git curl -y
 
 # Add bin dir of the tool to environment variables
-echo 'export PATH="$HOME/.local/bin"' >> ~/.bashrc
-echo 'export PATH="$HOME/.local/bin"' >> ~/.profile
+echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.profile
 export PATH="$PATH:$HOME/.local/bin"
 
 # Install UV
