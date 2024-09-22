@@ -12,4 +12,4 @@ export PATH="$PATH:$HOME/.local/bin"
 curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
 
 # Install tool
-uv tool install ./Playwright-Server/dist/*.whl
+git clone https://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@github.com/Neofix-IT/Playwright-Server && uv tool install ./Playwright-Server/dist/*.whl
