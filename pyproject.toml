@@ -17,5 +17,4 @@ build-backend = "hatchling.build"
 
 
 [project.scripts]
-hello = "playwright_server:main"
 test_me = "playwright_server:test"
