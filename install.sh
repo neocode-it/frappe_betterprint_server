@@ -4,9 +4,9 @@
 apt-get update && apt-get install sudo git curl -y
 
 # Add bin dir of the tool to environment variables
-echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
-echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.profile
-export PATH="$PATH:$HOME/.local/bin"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
+export PATH="$HOME/.local/bin:$PATH"
 
 # Install UV
 curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
