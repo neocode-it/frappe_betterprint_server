@@ -16,6 +16,7 @@ def test():
         browser = p.chromium.launch()
         page = browser.new_page()
         page.goto("http://playwright.dev")
+        page.screenshot(path="example.png")
         print(page.title())
         browser.close()
 
