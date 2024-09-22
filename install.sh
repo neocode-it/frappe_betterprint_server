@@ -15,4 +15,4 @@ curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
 uv tool install "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
 
 # Install playwright dependencies
-uxv playwright install --with-deps
+uvx playwright install --with-deps
