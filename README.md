@@ -1,21 +1,25 @@
 # Playwright Server
 
-Python application for a web-based playwright browser (chromium is beeing used)
+Python application for a web-based playwright browser-server (chromium is beeing used)
 
-## Installing
+## Installing Playwright Server
 
-Install UV
+```
+#!/bin/bash
 
-`curl -LsSf https://astral.sh/uv/install.sh | sh`
+# Install curl
+apt-get update && apt-get install curl -y
 
-install playwright server using: 
+# Run install script
+source <(curl -s https://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@raw.githubusercontent.com/Neofix-IT/Playwright-Server/refs/heads/main/install.sh)
+```
 
-uv tool install git+https://github.com/Neofix-IT/Playwright/releases/latest/download/CarbPro.1.1.0.aab
+## Update
 
-installiert alles :-) crazy
+```
+# Reinstall tool
+uv tool install "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
 
-
-https://docs.astral.sh/uv/guides/tools/#installing-tools
-
-
-uv tool upgrade ruff
+# Reinstall playwright dependencies
+uvx playwright install --with-deps
+```
