@@ -17,7 +17,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # Install tool
 # 
 # Reference: https://docs.astral.sh/uv/guides/tools/#installing-tools
-uv tool install "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
+# Python is explicit specified (which is required if there is an older incompatible python version installed)
+uv tool install --python 3.12 "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
 
 # Install playwright dependencies
 uvx playwright install --with-deps
