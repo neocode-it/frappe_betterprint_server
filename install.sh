@@ -3,15 +3,20 @@
 # Get required deps
 apt-get update && apt-get install sudo git curl -y
 
+# Install UV
+curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
+
 # Add bin dir of the tool to environment variables
+#
+# adding $HOME/.local/bin to PATH is required for UV tools
+# Reference: https://docs.astral.sh/uv/guides/integration/docker/#using-installed-tools
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
 export PATH="$HOME/.local/bin:$PATH"
 
-# Install UV
-curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
-
 # Install tool
+# 
+# Reference: https://docs.astral.sh/uv/guides/tools/#installing-tools
 uv tool install "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
 
 # Install playwright dependencies
