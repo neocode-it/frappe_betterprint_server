@@ -21,6 +21,11 @@ def start_server(public=False):
             threading.Thread(target=worker_backbone, daemon=True, args=(global_queue.queue,)).start()
             threading.Thread(target=worker_backbone, daemon=True, args=(global_queue.queue,)).start()
 
+            # Launch http server as interface
+            if public:
+                serve(application, host='0.0.0.0', port=39584)
+            else:
+                serve(application, host='127.0.0.1', port=39584)
 
     except Timeout:
         print("Cannot start server: Another instance of Playwright Server currently holds the lock.")
