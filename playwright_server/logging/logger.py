@@ -2,15 +2,15 @@ import logging
 import os
 
 def setup_logger():
-    log_directory = "/var/log/myapp"
-    log_file = os.path.join(log_directory, "app.log")
+    log_directory = "/var/log/playwright_server"
+    log_file = os.path.join(log_directory, "worker.log")
 
     if not os.path.exists(log_directory):
         os.makedirs(log_directory)
 
     logging.basicConfig(
         filename=log_file,
-        level=logging.DEBUG,
+        level=logging.ERROR,
         format='%(asctime)s %(levelname)s %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
