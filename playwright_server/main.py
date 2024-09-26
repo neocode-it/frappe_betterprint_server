@@ -8,6 +8,8 @@ def main():
         exit(0)
     elif "run" in sys.argv[1:]:
         start_server()
+    elif "run-public" in sys.argv[1:]:
+        start_server(True)
 
 if __name__ == "__main__":
     main()
