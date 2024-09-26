@@ -6,9 +6,9 @@ apt-get update && apt-get install sudo git curl -y
 # Install UV
 curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
 
-# Add bin dir of the tool to environment variables
+# Add bin dir (Location of the installed UV tool) to environment variables
 #
-# adding $HOME/.local/bin to PATH is required for UV tools
+# adding $HOME/.local/bin to PATH is required for UV tools in general
 # Reference: https://docs.astral.sh/uv/guides/integration/docker/#using-installed-tools
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
