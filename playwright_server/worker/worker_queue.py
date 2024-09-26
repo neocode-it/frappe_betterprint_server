@@ -1,5 +1,6 @@
 import threading
 import queue
+import uuid
 
 class WorkerQueue:
     _result = {}
@@ -7,11 +8,12 @@ class WorkerQueue:
 
     _q = queue.Queue()
     
-    def run_and_wait(self, command, content, key):
+    def run_and_wait(self, command : str, content : dict = {}):
+        key = uuid.uuid4()
         self._q.put({
             "key": key,
             "command": command,
-            "content": content
+            **content
         })
 
         with self._result_condition:
