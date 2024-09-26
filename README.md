@@ -1,6 +1,6 @@
 # Playwright Server
 
-Python application for a web-based playwright browser-server (chromium is beeing used)
+Python application for a web-based playwright browser-server (chromium is beeing used). Serving on port 39584
 
 ## Installing Playwright Server
 
@@ -18,8 +18,18 @@ source <(curl -s https://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@raw.githubuser
 
 ```
 # Reinstall tool
-uv tool install "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
+uv tool install --python 3.12 "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
 
 # Reinstall playwright dependencies
 uvx playwright install --with-deps
+```
+
+## Usage
+
+```
+# Run server on localhost (no public access)
+playwright_server run
+
+# Run server public, exposing port 39584
+playwright_server run-public
 ```
