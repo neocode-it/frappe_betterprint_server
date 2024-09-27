@@ -26,7 +26,7 @@ class WorkerQueue:
     def get_task(self):
         return self._q.get(timeout=1)
 
-    def task_done(self, task, result):
+    def task_done(self, task : dict, result : dict):
         with self._result_condition:
             self._result[task["key"]] = result
             self._result_condition.notify_all()
