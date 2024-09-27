@@ -33,14 +33,37 @@ def worker_backbone(queue):
         # Kill the app if the state couldn't be recovered within given attempts
         os._exit(1)
 
+
+def worker(q):
+    playwright = None
+    browser = None
+    task = None
+
+    try:
+        playwright = sync_playwright().start()
+        browser = playwright.chromium.launch()
+        while True:
+            try:
+                task = q.get_task()
+
+            except queue.Empty:
+                time.sleep(.2)
+
+    except Exception as e:
+        print('Exception occurred in Workerthread. Gathering log data and restart worker...')
+        log(e)
+
+        # Check if there was an interrupt within an ongoing task.
+        # If so, terminate task and report error
+        if task:    # Ongoing task? 
+            q.task_done(task, {"error": True, "content": "Error ocurred in workerthread"})
+        
+        # Throw exception to signal an issue for the worker_backbone
+        raise Exception('Important! Required to signal worker_backbone there went something wrong')
+    finally:
+        # Try to close browser and playwright if they are initialized.
+        # Might fail too, depending on the exception.
+        if browser:
             browser.close()
+        if playwright: 
             playwright.stop()
-        except Exception as e:
-            print('Exception occurred in Workerthread. Gathering log data and restart worker...')
-            log(e)
-        else:
-            break   # Break for loop if everything done without exception
-    else:
-        pass    # Final tasks if all attempts failed
-
-
