@@ -45,6 +45,14 @@ def worker(q):
         while True:
             try:
                 task = q.get_task()
+                
+                result = manage_task(task, browser) or {'error': True, 'content': 'Missing response from worker'}
+                result = {
+                    "error": False, 
+                    "content": "",
+                    **result
+                }
+                q.task_done(task, result)
 
             except queue.Empty:
                 time.sleep(.2)
