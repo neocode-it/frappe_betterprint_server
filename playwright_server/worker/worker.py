@@ -35,6 +35,8 @@ def worker_backbone(queue):
 
 
 def worker(q):
+    # Nested try-catch to try-close playwright after every attempt. 
+    # If that fails too, theres a backup try-catch
     playwright = None
     browser = None
     task = None
@@ -46,7 +48,10 @@ def worker(q):
             try:
                 task = q.get_task()
                 
-                result = manage_task(task, browser) or {'error': True, 'content': 'Missing response from worker'}
+                result = manage_task(task, browser)
+                if result is None:
+                    result = {'error': True, 'content': 'Missing response from worker'}
+                    
                 result = {
                     "error": False, 
                     "content": "",
