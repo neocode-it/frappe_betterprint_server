@@ -19,6 +19,21 @@ def application(environ, start_response):
     if request.path == '/v1/status':
         response = Response('PLAYWRIGHT OK', mimetype='text/plain')
 
+    elif request.path == '/v1/calculate-element-heights':
+        if (
+            type(data) is dict 
+            and {'html','element', 'style'} <= data.keys() 
+            and type(data['html']) is str 
+            and type(data['style']) is str
+            and type(data['element']) is str and not data['element'].isspace()
+        ):
+            result = global_queue.queue.run_and_wait('calculate-element-heights', data)
+            if result['error'] == False:
+                body = json.dumps(result['content'])
+                response = Response(body, mimetype='application/json')
+        else:
+            response = Response('Input data invalid', status='422')
+    
     else:
         response = Response('Not Found', status=404)
     
