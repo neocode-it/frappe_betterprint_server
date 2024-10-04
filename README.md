@@ -33,3 +33,8 @@ playwright_server run
 # Run server public, exposing port 39584
 playwright_server run-public
 ```
+
+## Limitations
+
+- Calculations of margin of the selector element not possible! This is due to the complexity of margin collapsing. Please use a wrapper element if required.
+- If any table row exceeds the max-height, proper calculation won't be possible. By default, this element will be returned even though it exceeds the max-height.
