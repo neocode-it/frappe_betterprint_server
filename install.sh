@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 # Get required deps
 apt-get update && apt-get install sudo git curl -y
 
 # Install UV
-curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.cargo/env
+curl -LsSf https://astral.sh/uv/install.sh | sh && . $HOME/.cargo/env
 
 # Add bin dir (Location of the installed UV tool) to environment variables
 #

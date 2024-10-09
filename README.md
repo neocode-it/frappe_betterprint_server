@@ -11,7 +11,7 @@ Python application for a web-based playwright browser-server (chromium is beeing
 apt-get update && apt-get install curl -y
 
 # Run install script
-source <(curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_server/refs/heads/main/install.sh)
+curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_server/refs/heads/main/install.sh | sh
 ```
 
 ## Update
