@@ -3,7 +3,7 @@ from werkzeug.wrappers import Request, Response
 import json
 import os
 
-import playwright_server.global_queue as global_queue
+import betterprint_server.global_queue as global_queue
 
 def application(environ, start_response):
     request = Request(environ)

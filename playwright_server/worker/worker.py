@@ -4,8 +4,8 @@ import queue
 import time
 import os
 
-from playwright_server.logging.logger import log
-from playwright_server.worker.task_manager import manage_task
+from betterprint_server.logging.logger import log
+from betterprint_server.worker.task_manager import manage_task
 
 # Main worker launcher, intended for bullet-proof reliance
 # 

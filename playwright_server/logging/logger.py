@@ -2,7 +2,7 @@ import logging
 import os
 
 def setup_logger():
-    log_directory = "/var/log/playwright_server"
+    log_directory = "/var/log/betterprint_server"
     log_file = os.path.join(log_directory, "worker.log")
 
     if not os.path.exists(log_directory):

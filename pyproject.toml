@@ -1,5 +1,5 @@
 [project]
-name = "playwright_server"
+name = "betterprint_server"
 version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
@@ -16,4 +16,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-playwright_server = "playwright_server.main:main"
+betterprint_server = "betterprint_server.main:main"

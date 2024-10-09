@@ -3,13 +3,13 @@ from waitress import serve
 from filelock import FileLock, Timeout
 import threading
 
-from playwright_server.worker.worker import worker_backbone
-from playwright_server.server.application import application
-import playwright_server.global_queue as global_queue
+from betterprint_server.worker.worker import worker_backbone
+from betterprint_server.server.application import application
+import betterprint_server.global_queue as global_queue
 
 
 def start_server(public=False):
-    lockfile = '/var/lock/playwright_server.lock'
+    lockfile = '/var/lock/betterprint_server.lock'
     lock = FileLock(lockfile)
 
     try:

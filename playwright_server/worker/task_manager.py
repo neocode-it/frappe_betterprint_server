@@ -1,7 +1,4 @@
-import re
-import html
-
-from playwright.sync_api import sync_playwright
+from betterprint_server.worker.ultility import strip_tags
 
 def manage_task(task, browser):
     if task['command'] == 'calculate-element-heights':

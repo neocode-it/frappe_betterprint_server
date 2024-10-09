@@ -1,8 +1,8 @@
-# Playwright Server
+# Frappe Betterprint Server
 
 Python application for a web-based playwright browser-server (chromium is beeing used). Serving on port 39584
 
-## Installing Playwright Server
+## Installing Betterprint Server
 
 ```
 #!/bin/bash
@@ -11,14 +11,14 @@ Python application for a web-based playwright browser-server (chromium is beeing
 apt-get update && apt-get install curl -y
 
 # Run install script
-source <(curl -s https://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@raw.githubusercontent.com/Neofix-IT/Playwright-Server/refs/heads/main/install.sh)
+source <(curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_server/refs/heads/main/install.sh)
 ```
 
 ## Update
 
 ```
 # Reinstall tool
-uv tool install --python 3.12 "git+https://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@github.com/Neofix-IT/Playwright-Server@main"
+uv tool install --python 3.12 "git+https://github.com/neocode-it/frappe_betterprint_server@main"
 
 # Reinstall playwright dependencies
 uvx playwright install --with-deps
@@ -28,10 +28,10 @@ uvx playwright install --with-deps
 
 ```
 # Run server on localhost (no public access)
-playwright_server run
+betterprint_server run
 
 # Run server public, exposing port 39584
-playwright_server run-public
+betterprint_server run-public
 ```
 
 ## Limitations
