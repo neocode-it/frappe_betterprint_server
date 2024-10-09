@@ -5,13 +5,11 @@ Python application for a web-based playwright browser-server (chromium is beeing
 ## Installing Betterprint Server
 
 ```
-#!/bin/bash
-
 # Install curl
 apt-get update && apt-get install curl -y
 
-# Run install script
-curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_server/refs/heads/main/install.sh | sh
+# Run install script (using eval to run it in the current shell)
+eval "$(curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_server/refs/heads/main/install.sh)"
 ```
 
 ## Update
