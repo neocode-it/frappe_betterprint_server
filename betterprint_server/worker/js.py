@@ -17,23 +17,27 @@ split_table_by_maxheight = '''
     pages = [];
     currentPage = '';
     currentHeight = 0;
+    currentItemCount = 0;
     
     elements.forEach(element => {
         elementHeight = element.offsetHeight;
 
         if(currentHeight + elementHeight > maxPixelHeight && currentHeight > 0){
-            pages.push(headHtml + currentPage + footHtml);
+            pages.push({"content": headHtml + currentPage + footHtml, "item_count": currentItemCount});
+
+            currentItemCount = 0;
             currentHeight = 0;
             currentPage = '';
         }
 
+        currentItemCount ++;
         currentPage += element.outerHTML;
         currentHeight += elementHeight;
     });
 
     // cleanup current page
     if(currentPage.length > 0){
-        pages.push(headHtml + currentPage + footHtml);
+        pages.push({"content": headHtml + currentPage + footHtml, "item_count": currentItemCount});
     }
     return pages;
 }
