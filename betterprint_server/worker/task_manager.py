@@ -3,6 +3,10 @@ from betterprint_server.worker.ultility import strip_tags
 def manage_task(task, browser):
     if task['command'] == 'calculate-element-heights':
         return calculate_element_heights(task, browser)
+    
+    elif task['command'] == 'generate-pdf':
+        return generate_pdf(task, browser)
+    
     elif task['command'] == 'split-table-by-height':
         return split_table_by_height(task, browser)
     
@@ -39,3 +43,9 @@ def split_table_by_height(task, browser) -> dict:
     page.close()
     return {'content': pages}
 
+def generate_pdf(task, browser):
+    page = browser.new_page()
+    page.set_content(task['html'])
+    page.pdf(path=task['filepath'])
+    page.close()
+    return {'content': 'successful'}
