@@ -34,6 +34,19 @@ def application(environ, start_response):
         else:
             response = Response('Input data invalid', status='422')
     
+    elif request.path == '/v1/split-table-by-height':
+        if (
+            type(data) is dict 
+            and {'html', 'max-height'} <= data.keys() 
+            and isinstance(data['html'], str)
+            and isinstance(data['max-height'], int) and data['max-height'] > 0
+        ):
+            result = global_queue.queue.run_and_wait('split-table-by-height', data)
+            if result['error'] == False:
+                body = json.dumps(result['content'])
+                response = Response(body, mimetype='application/json')
+        else:
+            response = Response('Input data invalid', status='422')
     else:
         response = Response('Not Found', status=404)
     
