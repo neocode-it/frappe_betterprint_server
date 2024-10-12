@@ -47,3 +47,20 @@ split_table_by_maxheight = '''
 Arguments:      int `maxHeight`
 
 Return value:   `[html]`"""
+
+get_element_height = '''
+(selector) => {
+    const elements = document.querySelectorAll(selector);
+    const heights = [];
+    elements.forEach(element => {
+        heights.push(Math.round(element.offsetHeight * 0.26458));
+    });
+    return heights;
+}
+'''
+"""JS Function
+
+Arguments:      str `selector`
+
+Return value:   `[height(s)]`"""
+

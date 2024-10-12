@@ -17,18 +17,10 @@ def manage_task(task, browser):
         }
 
 def calculate_element_heights(task, browser) -> dict:
-    html = html_wrapper(task['html'], strip_tags(task['style']))
     page = browser.new_page()
-    page.set_content(html)
-    heights = page.evaluate('''
-        (selector) => {
-        const elements = document.querySelectorAll(selector);
-        const heights = [];
-        elements.forEach(element => {
-            heights.push(Math.round(element.offsetHeight * 0.26458));
-        });
-        return heights;
-    }''', strip_tags(task['element']))
+    page.set_content(task['html'])
+    from betterprint_server.worker.js import get_element_height
+    heights = page.evaluate(get_element_height, strip_tags(task['element']))
     page.close()
     return {'content': heights}
 
