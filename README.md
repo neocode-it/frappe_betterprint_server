@@ -1,6 +1,8 @@
 # Frappe Betterprint Server
 
-Python application for a web-based playwright browser-server (chromium is beeing used). Serving on port 39584
+Python application for a web-based playwright browser-server (chromium is beeing used). All dimensions will be calculated in Millimeter (mm).
+
+The Webserver is accessible on port 39584
 
 ## Installing Betterprint Server
 
