@@ -47,6 +47,23 @@ def application(environ, start_response):
                 response = Response(body, mimetype='application/json')
         else:
             response = Response('Input data invalid', status='422')
+
+    elif request.path == '/v1/generate-pdf':
+        if (
+            type(data) is dict
+            and {'html','filepath'} <= data.keys() 
+            and type(data['html']) is str
+            and type(data['filepath']) is str
+            and os.path.isabs(data['filepath'])
+            and not os.path.isdir(data['filepath'])
+        ):
+            result = global_queue.queue.run_and_wait('generate-pdf', data)
+            if result['error'] == False:
+                body = json.dumps(result['content'])
+                response = Response(body, mimetype='application/json')
+        else:
+            response = Response('Input data invalid', status='422')
+
     else:
         response = Response('Not Found', status=404)
     
