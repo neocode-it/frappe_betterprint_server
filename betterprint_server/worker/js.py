@@ -1,18 +1,14 @@
 split_table_by_maxheight = '''
 (maxHeight) =>{
     const foot = document.querySelector('tfoot');
-    const footHtml = foot ? foot.outerHTML : '';
     const footHeight = foot ? foot.offsetHeight : 0;
 
     const head = document.querySelector('thead');
-    const headHtml = head ? head.outerHTML : '';
     const headHeight = head ? head.offsetHeight : 0;
 
     maxPixelHeight = maxHeight / 0.26458 - headHeight - footHeight;
 
-    const elements = document.querySelector('tbody') ? 
-        document.querySelectorAll('tbody tr') : 
-        document.querySelectorAll('tr');
+    const elements = document.querySelectorAll('tbody tr')
     
     pages = [];
     currentPage = '';
@@ -23,7 +19,9 @@ split_table_by_maxheight = '''
         elementHeight = element.offsetHeight;
 
         if(currentHeight + elementHeight > maxPixelHeight && currentHeight > 0){
-            pages.push({"content": headHtml + currentPage + footHtml, "item_count": currentItemCount});
+            tablePage = document.querySelector("table").cloneNode(true);
+            tablePage.querySelector("tbody").innerHTML = currentPage;
+            pages.push({"content": tablePage.outerHTML, "item_count": currentItemCount});
 
             currentItemCount = 0;
             currentHeight = 0;
@@ -37,7 +35,9 @@ split_table_by_maxheight = '''
 
     // cleanup current page
     if(currentPage.length > 0){
-        pages.push({"content": headHtml + currentPage + footHtml, "item_count": currentItemCount});
+        tablePage = document.querySelector("table").cloneNode(true);
+        tablePage.querySelector("tbody").innerHTML = currentPage;
+        pages.push({"content": tablePage.outerHTML, "item_count": currentItemCount});
     }
     return pages;
 }
@@ -64,3 +64,33 @@ Arguments:      str `selector`
 
 Return value:   `[height(s)]`"""
 
+
+# Note: still experimental, not tested yet
+split_text_by_maxheight = '''
+function adjustContent(maxHeight) {
+    const inputDiv = document.getElementById('html-input');
+    const outputDiv = document.getElementById('page-output');
+    const elements = inputDiv.children;
+    
+    for (let i = 0; i < elements.length; i++) {
+        outputDiv.appendChild(elements[i].cloneNode(true));
+        
+        if (outputDiv.offsetHeight > maxHeight) {
+            let lastElement = outputDiv.lastElementChild;
+            let lastElementClone = lastElement.cloneNode(false);
+            let content = lastElement.innerHTML.split(' ');
+            
+            while (outputDiv.offsetHeight > maxHeight && content.length > 0) {
+                lastElement.innerHTML = content.join(' ');
+                lastElementClone.innerHTML = content.pop() + ' ' + lastElementClone.innerHTML;
+            }
+            
+            outputDiv.removeChild(lastElement);
+            outputDiv.appendChild(lastElementClone);
+            break;
+        }
+    }
+    
+    return outputDiv.innerHTML;
+}
+'''
