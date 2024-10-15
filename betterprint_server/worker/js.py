@@ -1,4 +1,4 @@
-split_table_by_maxheight = '''
+split_table_by_maxheight = """
 (maxHeight) =>{
     const foot = document.querySelector('tfoot');
     const footHeight = foot ? foot.offsetHeight : 0;
@@ -41,14 +41,14 @@ split_table_by_maxheight = '''
     }
     return pages;
 }
-'''
+"""
 """JS Function
 
 Arguments:      int `maxHeight`
 
 Return value:   `[html]`"""
 
-get_element_height = '''
+get_element_height = """
 (selector) => {
     const elements = document.querySelectorAll(selector);
     const heights = [];
@@ -57,7 +57,7 @@ get_element_height = '''
     });
     return heights;
 }
-'''
+"""
 """JS Function
 
 Arguments:      str `selector`
@@ -66,7 +66,7 @@ Return value:   `[height(s)]`"""
 
 
 # Note: still experimental, not tested yet
-split_text_by_maxheight = '''
+split_text_by_maxheight = """
 function adjustContent(maxHeight) {
     const inputDiv = document.getElementById('html-input');
     const outputDiv = document.getElementById('page-output');
@@ -93,4 +93,4 @@ function adjustContent(maxHeight) {
     
     return outputDiv.innerHTML;
 }
-'''
+"""

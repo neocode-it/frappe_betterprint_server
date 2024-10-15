@@ -5,6 +5,7 @@ import os
 
 import betterprint_server.global_queue as global_queue
 
+
 def application(environ, start_response):
     request = Request(environ)
     # Parse json
@@ -14,47 +15,49 @@ def application(environ, start_response):
         data = request.get_json()
 
     # Set default response
-    response = Response('Internal server error', status=500)
-    
-    if request.path == '/v1/status':
-        response = Response('PLAYWRIGHT OK', mimetype='text/plain')
+    response = Response("Internal server error", status=500)
 
-    elif request.path == '/v1/calculate-element-heights':
-        if (
-            type(data) is dict 
-            and {'html','element'} <= data.keys() 
-            and type(data['html']) is str 
-            and type(data['element']) is str and not data['element'].isspace()
-        ):
-            result = global_queue.queue.run_and_wait('calculate-element-heights', data)
-            if result['error'] == False:
-                body = json.dumps(result['content'])
-                response = Response(body, mimetype='application/json')
-        else:
-            response = Response('Input data invalid', status='422')
-    
-    elif request.path == '/v1/split-table-by-height':
-        if (
-            type(data) is dict 
-            and {'html', 'max-height'} <= data.keys() 
-            and isinstance(data['html'], str)
-            and isinstance(data['max-height'], int) and data['max-height'] > 0
-        ):
-            result = global_queue.queue.run_and_wait('split-table-by-height', data)
-            if result['error'] == False:
-                body = json.dumps(result['content'])
-                response = Response(body, mimetype='application/json')
-        else:
-            response = Response('Input data invalid', status='422')
+    if request.path == "/v1/status":
+        response = Response("PLAYWRIGHT OK", mimetype="text/plain")
 
-    elif request.path == '/v1/generate-pdf':
+    elif request.path == "/v1/calculate-element-heights":
         if (
             type(data) is dict
-            and {'html','filepath'} <= data.keys() 
-            and type(data['html']) is str
-            and type(data['filepath']) is str
-            and os.path.isabs(data['filepath'])
-            and not os.path.isdir(data['filepath'])
+            and {"html", "element"} <= data.keys()
+            and type(data["html"]) is str
+            and type(data["element"]) is str
+            and not data["element"].isspace()
+        ):
+            result = global_queue.queue.run_and_wait("calculate-element-heights", data)
+            if not result["error"]:
+                body = json.dumps(result["content"])
+                response = Response(body, mimetype="application/json")
+        else:
+            response = Response("Input data invalid", status="422")
+
+    elif request.path == "/v1/split-table-by-height":
+        if (
+            type(data) is dict
+            and {"html", "max-height"} <= data.keys()
+            and isinstance(data["html"], str)
+            and isinstance(data["max-height"], int)
+            and data["max-height"] > 0
+        ):
+            result = global_queue.queue.run_and_wait("split-table-by-height", data)
+            if not result["error"]:
+                body = json.dumps(result["content"])
+                response = Response(body, mimetype="application/json")
+        else:
+            response = Response("Input data invalid", status="422")
+
+    elif request.path == "/v1/generate-pdf":
+        if (
+            type(data) is dict
+            and {"html", "filepath"} <= data.keys()
+            and type(data["html"]) is str
+            and type(data["filepath"]) is str
+            and os.path.isabs(data["filepath"])
+            and not os.path.isdir(data["filepath"])
         ):
             data = {"page_size": "A4", **data}
             valid_paperformats = [
@@ -77,9 +80,9 @@ def application(environ, start_response):
                     body = json.dumps(result["content"])
                     response = Response(body, mimetype="application/json")
         else:
-            response = Response('Input data invalid', status='422')
+            response = Response("Input data invalid", status="422")
 
     else:
-        response = Response('Not Found', status=404)
-    
+        response = Response("Not Found", status=404)
+
     return response(environ, start_response)

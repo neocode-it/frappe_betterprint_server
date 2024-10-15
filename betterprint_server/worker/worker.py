@@ -7,20 +7,20 @@ import os
 from betterprint_server.logging.logger import log
 from betterprint_server.worker.task_manager import manage_task
 
+
 # Main worker launcher, intended for bullet-proof reliance
-# 
-# Since the server is reliant on this worker, 
+#
+# Since the server is reliant on this worker,
 # we need to restart everything and log it if there's an exception.
 def worker_backbone(queue):
-    """ Main worker function, whose main purpose is stability for our worker. 
-    """
+    """Main worker function, whose main purpose is stability for our worker."""
     for attempt in range(20):
         try:
             worker(queue)
         except:
             # Nothing to do here, since exception-handling
             # is already done by the worker try-catch block
-            # 
+            #
             # We just need to restart the worker process
             pass
         else:
@@ -35,7 +35,7 @@ def worker_backbone(queue):
 
 
 def worker(q):
-    # Nested try-catch to try-close playwright after every attempt. 
+    # Nested try-catch to try-close playwright after every attempt.
     # If that fails too, theres a backup try-catch
     playwright = None
     browser = None
@@ -47,36 +47,38 @@ def worker(q):
         while True:
             try:
                 task = q.get_task()
-                
+
                 result = manage_task(task, browser)
                 if result is None:
-                    result = {'error': True, 'content': 'Missing response from worker'}
-                    
-                result = {
-                    "error": False, 
-                    "content": "",
-                    **result
-                }
+                    result = {"error": True, "content": "Missing response from worker"}
+
+                result = {"error": False, "content": "", **result}
                 q.task_done(task, result)
 
             except queue.Empty:
-                time.sleep(.2)
+                time.sleep(0.2)
 
     except Exception as e:
-        print('Exception occurred in Workerthread. Gathering log data and restart worker...')
+        print(
+            "Exception occurred in Workerthread. Gathering log data and restart worker..."
+        )
         log(e)
 
         # Check if there was an interrupt within an ongoing task.
         # If so, terminate task and report error
-        if task:    # Ongoing task? 
-            q.task_done(task, {"error": True, "content": "Error ocurred in workerthread"})
-        
+        if task:  # Ongoing task?
+            q.task_done(
+                task, {"error": True, "content": "Error ocurred in workerthread"}
+            )
+
         # Throw exception to signal an issue for the worker_backbone
-        raise Exception('Important! Required to signal worker_backbone there went something wrong')
+        raise Exception(
+            "Important! Required to signal worker_backbone there went something wrong"
+        )
     finally:
         # Try to close browser and playwright if they are initialized.
         # Might fail too, depending on the exception.
         if browser:
             browser.close()
-        if playwright: 
+        if playwright:
             playwright.stop()

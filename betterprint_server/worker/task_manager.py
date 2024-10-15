@@ -1,43 +1,45 @@
 from betterprint_server.worker.ultility import strip_tags
 
+
 def manage_task(task, browser):
-    if task['command'] == 'calculate-element-heights':
+    if task["command"] == "calculate-element-heights":
         return calculate_element_heights(task, browser)
-    
-    elif task['command'] == 'generate-pdf':
+
+    elif task["command"] == "generate-pdf":
         return generate_pdf(task, browser)
-    
-    elif task['command'] == 'split-table-by-height':
+
+    elif task["command"] == "split-table-by-height":
         return split_table_by_height(task, browser)
-    
+
     else:
-        return {
-            "error": True,
-            "description": "WORKER ERROR: Command not found"
-        }
+        return {"error": True, "description": "WORKER ERROR: Command not found"}
+
 
 def calculate_element_heights(task, browser) -> dict:
     page = browser.new_page()
-    page.set_content(task['html'])
+    page.set_content(task["html"])
     from betterprint_server.worker.js import get_element_height
-    heights = page.evaluate(get_element_height, strip_tags(task['element']))
+
+    heights = page.evaluate(get_element_height, strip_tags(task["element"]))
     page.close()
-    return {'content': heights}
+    return {"content": heights}
+
 
 def split_table_by_height(task, browser) -> dict:
     page = browser.new_page()
-    page.set_content(task['html'])
-
+    page.set_content(task["html"])
 
     from betterprint_server.worker.js import split_table_by_maxheight
-    pages = page.evaluate(split_table_by_maxheight, task['max-height'])
-    
+
+    pages = page.evaluate(split_table_by_maxheight, task["max-height"])
+
     page.close()
-    return {'content': pages}
+    return {"content": pages}
+
 
 def generate_pdf(task, browser):
     page = browser.new_page()
-    page.set_content(task['html'])
-    page.pdf(path=task['filepath'], format=task["page_size"])
+    page.set_content(task["html"])
+    page.pdf(path=task["filepath"], format=task["page_size"])
     page.close()
-    return {'content': 'successful'}
+    return {"content": "successful"}
