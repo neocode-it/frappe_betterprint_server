@@ -38,6 +38,6 @@ def split_table_by_height(task, browser) -> dict:
 def generate_pdf(task, browser):
     page = browser.new_page()
     page.set_content(task['html'])
-    page.pdf(path=task['filepath'])
+    page.pdf(path=task['filepath'], format=task["page_size"])
     page.close()
     return {'content': 'successful'}

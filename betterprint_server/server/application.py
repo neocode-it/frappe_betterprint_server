@@ -56,10 +56,26 @@ def application(environ, start_response):
             and os.path.isabs(data['filepath'])
             and not os.path.isdir(data['filepath'])
         ):
-            result = global_queue.queue.run_and_wait('generate-pdf', data)
-            if result['error'] == False:
-                body = json.dumps(result['content'])
-                response = Response(body, mimetype='application/json')
+            data = {"page_size": "A4", **data}
+            valid_paperformats = [
+                "Letter",
+                "Legal",
+                "Tabloid" "Ledger",
+                "A0",
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A5",
+                "A6",
+            ]
+            if data["page_size"] not in valid_paperformats:
+                response = Response("Paper format invalid.", status="422")
+            else:
+                result = global_queue.queue.run_and_wait("generate-pdf", data)
+                if not result["error"]:
+                    body = json.dumps(result["content"])
+                    response = Response(body, mimetype="application/json")
         else:
             response = Response('Input data invalid', status='422')
 
