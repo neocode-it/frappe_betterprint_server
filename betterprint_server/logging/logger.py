@@ -3,7 +3,7 @@ import os
 
 
 def setup_logger():
-    log_directory = os.path.expanduser("~/myapp/logs")
+    log_directory = os.path.expanduser("~/betterprint_server/logs")
     log_file = os.path.join(log_directory, "worker.log")
 
     if not os.path.exists(log_directory):
