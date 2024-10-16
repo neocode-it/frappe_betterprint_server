@@ -17,7 +17,7 @@ def worker_backbone(queue):
     for attempt in range(20):
         try:
             worker(queue)
-        except:
+        except Exception:
             # Nothing to do here, since exception-handling
             # is already done by the worker try-catch block
             #
