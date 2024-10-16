@@ -58,23 +58,23 @@ def worker(q):
             except queue.Empty:
                 time.sleep(0.2)
 
-    # except Exception as e:
-    #     print(
-    #         "Exception occurred in Workerthread. Gathering log data and restart worker..."
-    #     )
-    #     log(e)
+    except Exception as e:
+        print(
+            "Exception occurred in Workerthread. Gathering log data and restart worker..."
+        )
+        log(e)
 
-    #     # Check if there was an interrupt within an ongoing task.
-    #     # If so, terminate task and report error
-    #     if task:  # Ongoing task?
-    #         q.task_done(
-    #             task, {"error": True, "content": "Error ocurred in workerthread"}
-    #         )
+        # Check if there was an interrupt within an ongoing task.
+        # If so, terminate task and report error
+        if task:  # Ongoing task?
+            q.task_done(
+                task, {"error": True, "content": "Error ocurred in workerthread"}
+            )
 
-    #     # Throw exception to signal an issue for the worker_backbone
-    #     raise Exception(
-    #         "Important! Required to signal worker_backbone there went something wrong"
-    #     )
+        # Throw exception to signal an issue for the worker_backbone
+        raise Exception(
+            "Important! Required to signal worker_backbone there went something wrong"
+        )
     finally:
         # Try to close browser and playwright if they are initialized.
         # Might fail too, depending on the exception.
