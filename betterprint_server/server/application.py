@@ -51,36 +51,27 @@ def application(environ, start_response):
             response = Response("Input data invalid", status="422")
 
     elif request.path == "/v1/generate-pdf":
-        if (
-            type(data) is dict
-            and {"html", "filepath"} <= data.keys()
-            and type(data["html"]) is str
-            and type(data["filepath"]) is str
-            and os.path.isabs(data["filepath"])
-            and not os.path.isdir(data["filepath"])
-        ):
-            data = {"page_size": "A4", **data}
-            valid_paperformats = [
-                "Letter",
-                "Legal",
-                "Tabloid" "Ledger",
-                "A0",
-                "A1",
-                "A2",
-                "A3",
-                "A4",
-                "A5",
-                "A6",
-            ]
-            if data["page_size"] not in valid_paperformats:
-                response = Response("Paper format invalid.", status="422")
-            else:
-                result = global_queue.queue.run_and_wait("generate-pdf", data)
-                if not result["error"]:
-                    body = json.dumps(result["content"])
-                    response = Response(body, mimetype="application/json")
-        else:
-            response = Response("Input data invalid", status="422")
+        try:
+            if not isinstance(data["html"], str):
+                raise ValueError("'html' is not a str value")
+
+            if not os.path.isabs(data["filepath"]) or os.path.isdir(data["filepath"]):
+                raise ValueError("filepath must be absolute path to file")
+
+            if "page-width" in data and not data["page-width"] > 0:
+                raise ValueError("page width must be int and > 0")
+
+            if "page-height" in data and not data["page-height"] > 0:
+                raise ValueError("page height must be int and > 0")
+
+            result = global_queue.queue.run_and_wait("generate-pdf", data)
+
+            if not result["error"]:
+                body = json.dumps(result["content"])
+                response = Response(body, mimetype="application/json")
+
+        except Exception as e:
+            response = Response(f"Input data invalid: {e}", status="422")
 
     else:
         response = Response("Not Found", status=404)
