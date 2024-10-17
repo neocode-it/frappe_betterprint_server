@@ -18,7 +18,7 @@ def application(environ, start_response):
     response = Response("Internal server error", status=500)
 
     if request.path == "/v1/status":
-        response = Response("PLAYWRIGHT OK", mimetype="text/plain")
+        response = Response("BETTERPRINT OK", mimetype="text/plain")
 
     elif request.path == "/v1/calculate-element-heights":
         if (

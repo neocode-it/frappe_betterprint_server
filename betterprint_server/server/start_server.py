@@ -34,6 +34,6 @@ def start_server(public=False):
 
     except Timeout:
         print(
-            "Cannot start server: Another instance of Playwright Server currently holds the lock."
+            "Cannot start server: Another instance of Betterprint Server currently holds the lock."
         )
         exit(1)
