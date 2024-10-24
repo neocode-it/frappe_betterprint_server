@@ -18,7 +18,7 @@ eval "$(curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_
 
 ```
 # Reinstall tool
-uv tool install --python 3.12 "git+https://github.com/neocode-it/frappe_betterprint_server@main"
+uv tool install --reinstall --python 3.12 "git+https://github.com/neocode-it/frappe_betterprint_server@main"
 
 # Reinstall playwright dependencies
 uvx playwright install --with-deps
