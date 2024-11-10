@@ -87,7 +87,7 @@ def sanitize_cookies(cookies):
 
     Raise Exception if the format is invalid or keys are missing
     """
-    san_cookies = {}
+    san_cookies = []
 
     for cookie in cookies:
         san_cookie = {
@@ -98,3 +98,5 @@ def sanitize_cookies(cookies):
         }
 
         san_cookies.append(san_cookie)
+
+    return san_cookie
