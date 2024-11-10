@@ -99,4 +99,4 @@ def sanitize_cookies(cookies):
 
         san_cookies.append(san_cookie)
 
-    return san_cookie
+    return san_cookies
