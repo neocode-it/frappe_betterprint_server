@@ -64,6 +64,8 @@ def application(environ, start_response):
             if "page-height" in data and not data["page-height"] > 0:
                 raise ValueError("page height must be int and > 0")
 
+            data["cookies"] = sanitize_cookies(data.get("cookies", []))
+
             result = global_queue.queue.run_and_wait("generate-pdf", data)
 
             if not result["error"]:
