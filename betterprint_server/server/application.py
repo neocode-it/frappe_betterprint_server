@@ -77,3 +77,22 @@ def application(environ, start_response):
         response = Response("Not Found", status=404)
 
     return response(environ, start_response)
+
+
+def sanitize_cookies(cookies):
+    """
+    Will sanitize cookies acoording to the format required by playwright
+
+    Raise Exception if the format is invalid or keys are missing
+    """
+    san_cookies = {}
+
+    for cookie in cookies:
+        san_cookie = {
+            "name": str(cookie["name"]),
+            "value": str(cookie["value"]),
+            "domain": str(cookie["domain"]),
+            "path": str(cookie["path"]),
+        }
+
+        san_cookies.append(san_cookie)
