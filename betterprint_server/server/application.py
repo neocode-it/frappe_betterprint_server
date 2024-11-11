@@ -64,8 +64,6 @@ def application(environ, start_response):
             if "page-height" in data and not data["page-height"] > 0:
                 raise ValueError("page height must be int and > 0")
 
-            data["cookies"] = sanitize_cookies(data.get("cookies", []))
-
             result = global_queue.queue.run_and_wait("generate-pdf", data)
 
             if not result["error"]:
@@ -79,24 +77,3 @@ def application(environ, start_response):
         response = Response("Not Found", status=404)
 
     return response(environ, start_response)
-
-
-def sanitize_cookies(cookies):
-    """
-    Will sanitize cookies acoording to the format required by playwright
-
-    Raise Exception if the format is invalid or keys are missing
-    """
-    san_cookies = []
-
-    for cookie in cookies:
-        san_cookie = {
-            "name": str(cookie["name"]),
-            "value": str(cookie["value"]),
-            "domain": str(cookie["domain"]),
-            "path": str(cookie["path"]),
-        }
-
-        san_cookies.append(san_cookie)
-
-    return san_cookies
