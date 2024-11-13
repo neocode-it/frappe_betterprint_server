@@ -21,33 +21,41 @@ def application(environ, start_response):
         response = Response("BETTERPRINT OK", mimetype="text/plain")
 
     elif request.path == "/v1/calculate-element-heights":
-        if (
-            type(data) is dict
-            and {"html", "element"} <= data.keys()
-            and type(data["html"]) is str
-            and type(data["element"]) is str
-            and not data["element"].isspace()
-        ):
-            result = global_queue.queue.run_and_wait("calculate-element-heights", data)
+        try:
+            input_data = {
+                "html": str(data["html"]),
+                "element": str(data["element"]),
+            }
+
+            result = global_queue.queue.run_and_wait(
+                "calculate-element-heights", input_data
+            )
+
             if not result["error"]:
                 body = json.dumps(result["content"])
                 response = Response(body, mimetype="application/json")
-        else:
-            response = Response("Input data invalid", status="422")
+            else:
+                raise Exception("Unknown exception")
+
+        except Exception as e:
+            response = Response(f"Input data invalid: {e}", status="422")
 
     elif request.path == "/v1/split-table-by-height":
-        if (
-            type(data) is dict
-            and {"html", "max-height"} <= data.keys()
-            and isinstance(data["html"], str)
-            and isinstance(data["max-height"], int)
-            and data["max-height"] > 0
-        ):
+        try:
+            if not isinstance(data["html"], str):
+                raise ValueError("html must be defined and type string")
+
+            if not isinstance(data["max-height"], int) and data["max-height"] > 0:
+                raise ValueError("max-height must be defined and > int 0")
+
             result = global_queue.queue.run_and_wait("split-table-by-height", data)
             if not result["error"]:
                 body = json.dumps(result["content"])
                 response = Response(body, mimetype="application/json")
-        else:
+            else:
+                raise Exception("Unknown exception")
+
+        except Exception as e:
             response = Response("Input data invalid", status="422")
 
     elif request.path == "/v1/generate-pdf":
@@ -69,6 +77,9 @@ def application(environ, start_response):
             if not result["error"]:
                 body = json.dumps(result["content"])
                 response = Response(body, mimetype="application/json")
+
+            else:
+                raise Exception("Unknown exception")
 
         except Exception as e:
             response = Response(f"Input data invalid: {e}", status="422")
