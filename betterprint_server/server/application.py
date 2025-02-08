@@ -84,6 +84,22 @@ def application(environ, start_response):
         except Exception as e:
             response = Response(f"Input data invalid: {e}", status="422")
 
+    elif request.path == "/v1/generate-betterprint-pdf":
+        try:
+            if not isinstance(data["html"], str):
+                raise ValueError("'html' is not a str value")
+
+            if not os.path.isabs(data["filepath"]) or os.path.isdir(data["filepath"]):
+                raise ValueError("filepath must be absolute path to file")
+
+            result = global_queue.queue.run_and_wait("generate-betterprint-pdf", data)
+
+            if not result["error"]:
+                body = json.dumps(result["content"])
+                response = Response(body, mimetype="application/json")
+
+            else:
+                raise Exception("Unknown exception")
     else:
         response = Response("Not Found", status=404)
 
