@@ -8,6 +8,9 @@ def manage_task(task, browser):
     elif task["command"] == "generate-pdf":
         return generate_pdf(task, browser)
 
+    elif task["command"] == "generate-betterprint-pdf":
+        return generate_betterprint_pdf(task, browser)
+
     elif task["command"] == "split-table-by-height":
         return split_table_by_height(task, browser)
 
@@ -43,6 +46,25 @@ def generate_pdf(task, browser):
     page_height = f"{task.get('page-height', 297)}mm"
 
     page.set_content(task["html"])
+
+    page.pdf(width=page_width, height=page_height, path=task["filepath"])
+
+    page.close()
+    return {"content": "successful"}
+def generate_betterprint_pdf(task: dict, browser) -> dict:
+    """
+    Generates a PDF from HTML content, waiting for a custom event or timeout.
+    """
+    page = browser.new_page()
+    page_width = f"{task.get('page-width', '210mm')}"
+    page_height = f"{task.get('page-height', '297mm')}"
+
+    page.set_content(task["html"])
+
+    try:
+        page.wait_for_event("betterPrintFinished", timeout=10000)
+    except Exception as e:
+        return {"content": "failed"}
 
     page.pdf(width=page_width, height=page_height, path=task["filepath"])
 
