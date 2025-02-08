@@ -100,6 +100,9 @@ def application(environ, start_response):
 
             else:
                 raise Exception("Unknown exception")
+
+        except Exception as e:
+            response = Response(f"Input data invalid: {e}", status="422")
     else:
         response = Response("Not Found", status=404)
 
