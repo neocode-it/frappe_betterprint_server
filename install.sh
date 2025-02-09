@@ -21,4 +21,4 @@ export PATH="$HOME/.local/bin:$PATH"
 uv tool install --python 3.12 "git+https://github.com/neocode-it/frappe_betterprint_server@main"
 
 # Install playwright dependencies
-playwright install chromium --with-deps
+uvx playwright install chromium --with-deps
