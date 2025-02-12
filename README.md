@@ -17,11 +17,8 @@ eval "$(curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_
 ## Update
 
 ```
-# Reinstall tool
-uv tool install --reinstall --python 3.12 "git+https://github.com/neocode-it/frappe_betterprint_server@main"
-
-# Reinstall playwright dependencies
-uvx playwright install --with-deps
+# Run update script
+eval "$(curl -s https://raw.githubusercontent.com/neocode-it/frappe_betterprint_server/refs/heads/main/update.sh)"
 ```
 
 ## Usage
