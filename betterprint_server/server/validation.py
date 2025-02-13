@@ -16,3 +16,18 @@ def validate(data_dict, validators):
                 if not method(data_dict[key]):
                     errors.append(f"Invalid value for key: {key}")
     return errors
+
+
+def is_valid_pdf_filepath(filepath: str) -> bool:
+    """Validate if the given path is a valid pdf filepath.
+    Doesn't check if the path exists"""
+    try:
+        if not os.path.isabs(filepath) or os.path.isdir(filepath):
+            return False
+
+        if not filepath.endswith(".pdf"):
+            return False
+
+        return True
+    except Exception as e:
+        return False
