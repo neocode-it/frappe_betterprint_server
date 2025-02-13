@@ -31,3 +31,18 @@ def is_valid_pdf_filepath(filepath: str) -> bool:
         return True
     except Exception as e:
         return False
+
+
+def is_valid_url(url):
+    """Checks if the url is a valid url which can be used for samesite origin"""
+    if type(url) is not str:
+        return False
+
+    check = r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})"
+
+    regex = re.compile(check, re.IGNORECASE)
+    return re.match(regex, url) is not None
+
+
+def is_valid_string(string):
+    return type(string) is str
