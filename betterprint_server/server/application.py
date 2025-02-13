@@ -17,6 +17,17 @@ def application(environ, start_response):
     # Set default response
     response = Response("Internal server error", status=500)
 
+    route_map = {
+        "/v1/status": status,
+    }
+
+    if request.path in route_map:
+        response = route_map[request.path](data)
+    else:
+        response = Response("Not Found", status=404)
+
+    return response(environ, start_response)
+
     if request.path == "/v1/status":
         response = Response("BETTERPRINT OK", mimetype="text/plain")
 
