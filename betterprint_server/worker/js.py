@@ -94,3 +94,95 @@ function adjustContent(maxHeight) {
     return outputDiv.innerHTML;
 }
 """
+
+
+split_text_by_height = """
+// Prototype
+// Almost ready for prod
+//
+// Usage:     
+// from betterprint_server.worker.js import split_text_by_height
+// pages = page.evaluate(split_text_by_height, [task["max-height"], 67])
+
+([selector, zwo]) => {
+    function getNodes(element) {
+        const elementNodes = [];
+        element.childNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                elementNodes.push(node);
+            }
+        });
+        return elementNodes;
+    }
+    function setParentTree(targetcontainer){
+        targetcontainer.innerHTML = "";
+        let currentNode = targetcontainer;
+        
+        if (currentParentTree.length > 0){
+            currentNode = currentParentTree[0].cloneNode(false);
+            targetcontainer.appendChild(currentNode);
+        }
+        
+        for(let i=1; i<currentParentTree.length; i++){
+            currentNode = currentParentTree[i-1].cloneNode(false);
+            targetcontainer.appendChild(node);
+        }
+
+        return currentNode;
+    }
+    function limitText(itemNodes, testDiv, parentEl, maxHeight){
+        for(let i=0; i<itemNodes.length; i++){
+
+            element = itemNodes[i];
+            const newel = element.cloneNode(true);
+            
+            parentEl.appendChild(newel);
+            
+            if(testDiv.offsetHeight > maxHeight){
+
+                // Is the current item the only? 
+                // -> Might be to large
+                if (parentEl.childNodes.length == 1){
+                    // Check if item can be split
+                    const newNodes = getNodes(itemNodes[i]);
+                    if (newNodes.length > 0){
+                        // Remove previously added node
+                        let newParent = parentEl.lastChild;
+                        newParent.innerHTML = "";
+
+                        // Use recursive split
+                        currentParentTree.push(newParent);
+                        limitText(newNodes, testDiv, newParent, maxHeight);
+                        currentParentTree.pop();
+                    }
+
+                    else {
+                        alert("Item to large");
+                        break;
+                    }
+                } else {
+                    document.querySelector("body").appendChild(testDiv.cloneNode(true));
+                    // finish page
+                    parentEl = setParentTree(testDiv);
+                
+                    // Set index -1 to re-take current item
+                    i --;
+                }
+                
+                
+            }
+            
+        }
+
+    }
+
+    currentParentTree = [];
+
+    const container = document.querySelector('.tester');
+    const parent = document.querySelector("main");
+    const nodes = getNodes(parent);
+    parent.remove();
+    limitText(nodes, container, container, 300);
+    return zwo;
+}
+"""
