@@ -22,6 +22,7 @@ def application(environ, start_response):
         "/v1/calculate-element-heights": calculate_element_height,
         "/v1/generate-pdf": generate_pdf,
         "/v1/split-table-by-height": split_table_by_height,
+        "/v1/generate-betterprint-pdf": generate_betterprint_pdf,
     }
 
     if request.path in route_map:
@@ -147,3 +148,27 @@ def split_table_by_height(data):
 
     except Exception as e:
         return Response("Input data invalid", status="422")
+
+
+def generate_betterprint_pdf(data):
+    errors = validate(
+        data,
+        {
+            "filepath": [validation.is_valid_pdf_filepath],
+            "origin": [validation.is_valid_url],
+            "content": [validation.is_valid_string],
+        },
+    )
+
+    if errors:
+        response = {"status": "failed", "errors": errors}
+        return Response(json.dumps(response), mimetype="application/json")
+
+    # global_queue.queue.run_and_wait("generate-pdf", data)
+    result = {"error": "dsfd"}
+
+    if "error" in result:
+        return Response(f"Input data invalid: {result['error']}", status="422")
+
+    body = json.dumps(result["content"])
+    return Response(body, mimetype="application/json")
