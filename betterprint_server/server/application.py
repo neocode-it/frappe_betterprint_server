@@ -112,16 +112,15 @@ def generate_betterprint_pdf(data):
         {
             "filepath": [validation.is_valid_pdf_filepath],
             "origin": [validation.is_valid_url],
-            "content": [validation.is_valid_string],
+            "html": [validation.is_valid_string],
         },
     )
 
     if errors:
         response = {"status": "failed", "errors": errors}
-        return Response(json.dumps(response), mimetype="application/json")
+        return Response(json.dumps(response), mimetype="application/json", status="422")
 
-    # global_queue.queue.run_and_wait("generate-pdf", data)
-    result = {"error": "dsfd"}
+    result = global_queue.queue.run_and_wait("generate-betterprint-pdf", data)
 
     if "error" in result:
         return Response(f"Input data invalid: {result['error']}", status="422")
