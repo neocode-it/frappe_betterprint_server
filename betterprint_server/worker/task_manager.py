@@ -70,3 +70,16 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
 
     page.close()
     return {"content": "successful"}
+
+def modify_cors(route, url_pattern):
+    try:
+        if url_pattern in route.request.url:
+            response = route.fetch()
+            headers = response.headers.copy()
+            headers["Access-Control-Allow-Origin"] = "*"
+            route.fulfill(status=response.status, headers=headers, body=response.body())
+        else:
+            print("URL IST: " + route.request.url)
+            route.continue_()
+    except Exception as e:
+        route.continue_()
