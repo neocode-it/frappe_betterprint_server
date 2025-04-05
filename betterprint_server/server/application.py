@@ -122,7 +122,7 @@ def generate_betterprint_pdf(data):
 
     result = global_queue.queue.run_and_wait("generate-betterprint-pdf", data)
 
-    if "error" in result:
+    if result["error"]:
         return Response(f"Input data invalid: {result['error']}", status="422")
 
     body = json.dumps(result["content"])
