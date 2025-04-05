@@ -111,7 +111,7 @@ def generate_betterprint_pdf(data):
         data,
         {
             "filepath": [validation.is_valid_pdf_filepath],
-            "origin": [validation.is_valid_url],
+            "allow_origin": [validation.is_valid_url],
             "html": [validation.is_valid_string],
         },
     )
