@@ -1,4 +1,8 @@
-from betterprint_server.worker.ultility import strip_tags
+from betterprint_server.worker.ultility import (
+    strip_tags,
+    playwright_add_cors_allow_route,
+)
+from urllib.parse import urlparse
 
 
 def manage_task(task, browser):
@@ -51,37 +55,58 @@ def generate_pdf(task, browser):
 
     page.close()
     return {"content": "successful"}
+
+
 def generate_betterprint_pdf(task: dict, browser) -> dict:
     """
     Generates a PDF from HTML content, waiting for a custom event or timeout.
     """
-    page = browser.new_page()
-    page_width = f"{task.get('page-width', '210mm')}"
-    page_height = f"{task.get('page-height', '297mm')}"
 
+    # TODO: Implement page size (Maybe first complete frappes-app implementation?)
+    # TODO: Implement CORS with proper regex
+    # TODO: Implement Browser/Pagedjs error handling and return in case of exceptions
+
+    page = browser.new_page()
+
+    # Convert origin url into origin domain
+    parsed_url = urlparse(task["allow_origin"])
+    full_domain = parsed_url.netloc
+    domain = full_domain.split(":")[0]  # Remove the port if present
+
+    # Ignore CORS for this domain
+    # Workaround for: Chrome will always block CORS for local html files
+    playwright_add_cors_allow_route(page, domain)
+
+    # Add page content
     page.set_content(task["html"])
 
     try:
-        page.wait_for_event("betterPrintFinished", timeout=10000)
-    except Exception as e:
-        return {"content": "failed"}
+        # Wait for the "betterPrintFinished" event with a timeout of 30 seconds (30000 ms)
+        page.evaluate("""
+            document.addEventListener('betterPrintFinished', () => {
+                window.betterPrintFinished = true;
+            });
+        """)
 
-    page.pdf(width=page_width, height=page_height, path=task["filepath"])
+        page.wait_for_function("window.betterPrintFinished === true", timeout=30000)
 
-    page.close()
+        dimensions = page.evaluate("""() => {
+            const page = document.querySelector(".paginatejs-pages .page");
+            const style = getComputedStyle(page);
+            const width = style.width;
+            const height = style.height;
+            return {"width": width, "height": height};
+            }
+        """)
+    except Exception:
+        return {
+            "content": "failed",
+            "error": "Unknown failure printing PDF",
+        }
+
+    # page.pdf(width=page_width, height=page_height, path=task["filepath"])
+    page.pdf(
+        width=dimensions["width"], height=dimensions["height"], path=task["filepath"]
+    )
+
     return {"content": "successful"}
-
-
-def modify_cors(route, allow_domain):
-    try:
-        domain_pattern = rf"^https?://{re.escape(allow_domain)}(:[0-9]+)?(/|$)"
-
-        if re.match(domain_pattern, route.request.url):
-            response = route.fetch()
-            headers = response.headers.copy()
-            headers["Access-Control-Allow-Origin"] = "*"
-            route.fulfill(status=response.status, headers=headers, body=response.body())
-        else:
-            route.continue_()
-    except Exception as e:
-        route.continue_()
