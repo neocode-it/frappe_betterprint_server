@@ -26,3 +26,18 @@ def html_wrapper(body: str, style: str) -> str:
         </body>
     </html> 
     """
+
+
+def modify_playwright_cors(route, allow_domain):
+    try:
+        domain_pattern = rf"^https?://{re.escape(allow_domain)}(:[0-9]+)?(/|$)"
+
+        if re.match(domain_pattern, route.request.url):
+            response = route.fetch()
+            headers = response.headers.copy()
+            headers["Access-Control-Allow-Origin"] = "*"
+            route.fulfill(status=response.status, headers=headers, body=response.body())
+        else:
+            route.continue_()
+    except Exception as e:
+        route.continue_()
