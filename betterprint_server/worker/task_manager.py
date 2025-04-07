@@ -75,7 +75,7 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
 
     # Ignore CORS for this domain
     # Workaround for: Chrome will always block CORS for local html files
-    playwright_add_cors_allow_route(page, domain)
+    # playwright_add_cors_allow_route(page, domain)
 
     # Add page content
     page.set_content(task["html"])
