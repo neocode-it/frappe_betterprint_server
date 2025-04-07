@@ -36,7 +36,7 @@ def application(environ, start_response):
 
 
 def status(data):
-    return Response("BETTERPRINT OK TEST", mimetype="text/plain")
+    return Response("BETTERPRINT OK", mimetype="text/plain")
 
 
 def calculate_element_height(data):
