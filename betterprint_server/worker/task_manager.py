@@ -106,7 +106,10 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
 
     # page.pdf(width=page_width, height=page_height, path=task["filepath"])
     page.pdf(
-        width=dimensions["width"], height=dimensions["height"], path=task["filepath"]
+        width=dimensions["width"],
+        height=dimensions["height"],
+        path=task["filepath"],
+        print_background=True,
     )
 
     return {"content": "successful"}
