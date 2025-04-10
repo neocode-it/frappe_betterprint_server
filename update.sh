@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Kill running betterprint_server instances
 kill -SIGTERM $(pgrep -f 'betterprint_server')
 
