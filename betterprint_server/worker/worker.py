@@ -42,8 +42,8 @@ def worker(q):
     task = None
 
     try:
-        playwright = sync_playwright().start()
-        browser = playwright.chromium.launch()
+        # playwright = sync_playwright().start()
+        # browser = playwright.chromium.launch()
         while True:
             try:
                 task = q.get_task()

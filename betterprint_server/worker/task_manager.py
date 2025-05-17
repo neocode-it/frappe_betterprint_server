@@ -1,3 +1,5 @@
+from playwright.sync_api import sync_playwright
+
 from betterprint_server.worker.ultility import (
     strip_tags,
     playwright_add_cors_allow_route,
@@ -62,20 +64,21 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
     Generates a PDF from HTML content, waiting for a custom event or timeout.
     """
 
-    from playwright.sync_api import sync_playwright
+    import time
+
+    start_time = time.time()
 
     playwright = None
     browser = None
-    task = None
 
-    with sync_playwright() as playwright:
-        print("Starting Playwright with reboot option")
-        gg = playwright.chromium.launch()
+    try:
+        playwright = sync_playwright().start()
+        browser = playwright.chromium.launch()
         # TODO: Implement page size (Maybe first complete frappes-app implementation?)
         # TODO: Implement CORS with proper regex
         # TODO: Implement Browser/Pagedjs error handling and return in case of exceptions
 
-        page = gg.new_page()
+        page = browser.new_page()
 
         # # Convert origin url into origin domain
         parsed_url = urlparse(task["allow_origin"])
@@ -122,3 +125,11 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
         )
 
         return {"content": "successful"}
+    finally:
+        print(f"Time taken: {time.time() - start_time} seconds")
+        # Try to close browser and playwright if they are initialized.
+        # Might fail too, depending on the exception.
+        if browser:
+            browser.close()
+        if playwright:
+            playwright.stop()
