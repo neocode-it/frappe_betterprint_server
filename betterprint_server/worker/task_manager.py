@@ -69,6 +69,7 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
     task = None
 
     with sync_playwright() as playwright:
+        print("Starting Playwright with reboot option")
         gg = playwright.chromium.launch()
         # TODO: Implement page size (Maybe first complete frappes-app implementation?)
         # TODO: Implement CORS with proper regex
