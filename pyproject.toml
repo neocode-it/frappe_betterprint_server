@@ -3,9 +3,9 @@ name = "betterprint_server"
 version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
-    "filelock>=3.16.0",
+    "filelock",
     "playwright>=1.47.0",
     "waitress>=3.0.0",
     "werkzeug>=3.0.4",

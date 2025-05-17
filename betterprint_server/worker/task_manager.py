@@ -62,54 +62,62 @@ def generate_betterprint_pdf(task: dict, browser) -> dict:
     Generates a PDF from HTML content, waiting for a custom event or timeout.
     """
 
-    # TODO: Implement page size (Maybe first complete frappes-app implementation?)
-    # TODO: Implement CORS with proper regex
-    # TODO: Implement Browser/Pagedjs error handling and return in case of exceptions
+    from playwright.sync_api import sync_playwright
 
-    page = browser.new_page()
+    playwright = None
+    browser = None
+    task = None
 
-    # # Convert origin url into origin domain
-    parsed_url = urlparse(task["allow_origin"])
-    full_domain = parsed_url.netloc
-    domain = full_domain.split(":")[0]  # Remove the port if present
+    with sync_playwright() as playwright:
+        gg = playwright.chromium.launch()
+        # TODO: Implement page size (Maybe first complete frappes-app implementation?)
+        # TODO: Implement CORS with proper regex
+        # TODO: Implement Browser/Pagedjs error handling and return in case of exceptions
 
-    # # Ignore CORS for this domain
-    # # Workaround for: Chrome will always block CORS for local html files
-    playwright_add_cors_allow_route(page, domain)
+        page = gg.new_page()
 
-    # Add page content
-    page.set_content(task["html"])
+        # # Convert origin url into origin domain
+        parsed_url = urlparse(task["allow_origin"])
+        full_domain = parsed_url.netloc
+        domain = full_domain.split(":")[0]  # Remove the port if present
 
-    try:
-        # Wait for the "betterPrintFinished" event with a timeout of 30 seconds (30000 ms)
-        page.evaluate("""
-            document.addEventListener('betterPrintFinished', () => {
-                window.betterPrintFinished = true;
-            });
-        """)
+        # # Ignore CORS for this domain
+        # # Workaround for: Chrome will always block CORS for local html files
+        playwright_add_cors_allow_route(page, domain)
 
-        page.wait_for_function("window.betterPrintFinished === true", timeout=30000)
+        # Add page content
+        page.set_content(task["html"])
 
-        dimensions = page.evaluate("""() => {
-            const page = document.querySelector(".paginatejs-pages .page");
-            const style = getComputedStyle(page);
-            const width = style.width;
-            const height = style.height;
-            return {"width": width, "height": height};
+        try:
+            # Wait for the "betterPrintFinished" event with a timeout of 30 seconds (30000 ms)
+            page.evaluate("""
+                document.addEventListener('betterPrintFinished', () => {
+                    window.betterPrintFinished = true;
+                });
+            """)
+
+            page.wait_for_function("window.betterPrintFinished === true", timeout=30000)
+
+            dimensions = page.evaluate("""() => {
+                const page = document.querySelector(".paginatejs-pages .page");
+                const style = getComputedStyle(page);
+                const width = style.width;
+                const height = style.height;
+                return {"width": width, "height": height};
+                }
+            """)
+        except Exception:
+            return {
+                "content": "failed",
+                "error": "Unknown failure printing PDF",
             }
-        """)
-    except Exception:
-        return {
-            "content": "failed",
-            "error": "Unknown failure printing PDF",
-        }
 
-    # page.pdf(width=page_width, height=page_height, path=task["filepath"])
-    page.pdf(
-        width=dimensions["width"],
-        height=dimensions["height"],
-        path=task["filepath"],
-        print_background=True,
-    )
+        # page.pdf(width=page_width, height=page_height, path=task["filepath"])
+        page.pdf(
+            width=dimensions["width"],
+            height=dimensions["height"],
+            path=task["filepath"],
+            print_background=True,
+        )
 
-    return {"content": "successful"}
+        return {"content": "successful"}
